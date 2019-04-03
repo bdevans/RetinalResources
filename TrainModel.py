@@ -82,6 +82,7 @@ data_augmentation = True
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 model_name = 'cifar10_type_'+trial_label+'_noise_start_'+str(noise_start)+'_noise_end_'+str(noise_end)+'_reg_'+str(reg)+'_retina_reg_'+str(retina_out_weight_reg)+'_retina_hidden_channels_'+str(retina_hidden_channels)+'_SS_'+str(retina_out_stride)+'_task_'+task+'_filter_size_'+str(filter_size)+'_retina_layers_'+str(retina_layers)+'_vvs_layers'+str(vvs_layers)+'_bias_'+str(use_b)+'_actreg_'+str(actreg)+'_retina_out_channels_'+str(retina_out_width)+'_vvs_width_'+str(vvs_width)+'_epochs_'+str(epochs)
+# f"cifar10_type_{trial_label}_noise_start_{noise_start}_noise_end_{noise_end}_reg_{reg}_retina_reg_{retina_out_weight_reg}_retina_hidden_channels_{retina_hidden_channels}_SS_{retina_out_stride}_task_{task}_filter_size_{filter_size}_retina_layers_{retina_layers}_vvs_layers{vvs_layers}_bias_{use_b}_actreg_{actreg}_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}_epochs_{epochs}"
 
 batch_size = 64
 num_classes = 10
