@@ -137,7 +137,7 @@ if retina_layers > 2:
     for iterationX in range(retina_layers - 2):
         if iterationX == retina_layers - 3:
             retina_out = Conv2D(retina_out_width, (filter_size, filter_size),
-                                strides=(retina_out_stride,retina_out_stride),
+                                strides=(retina_out_stride, retina_out_stride),
                                 kernel_regularizer=keras.regularizers.l1(retina_out_weight_reg),
                                 activity_regularizer=keras.regularizers.l1(actreg),
                                 padding='same', name='retina_'+str(iterationX+3),
@@ -154,7 +154,7 @@ if retina_layers == 2:
                           padding='same', input_shape=x_train.shape[1:],
                           name='retina_1', activation='relu', trainable=True)(gn)
     retina_out = Conv2D(retina_out_width, (filter_size, filter_size),
-                        strides=(retina_out_stride,retina_out_stride),
+                        strides=(retina_out_stride, retina_out_stride),
                         kernel_regularizer=keras.regularizers.l1(retina_out_weight_reg),
                         padding='same', activation='relu',
                         activity_regularizer=keras.regularizers.l1(actreg),
@@ -163,11 +163,11 @@ if retina_layers == 2:
 
 elif retina_layers == 1:
     retina_out = Conv2D(retina_out_width, (filter_size, filter_size),
-                        strides=(retina_out_stride,retina_out_stride),
+                        strides=(retina_out_stride, retina_out_stride),
                         kernel_regularizer=keras.regularizers.l1(specalreg),  # specalreg is not defined!
                         activity_regularizer=keras.regularizers.l1(actreg),
                         padding='same', input_shape=x_train.shape[1:],
-                        use_bias = use_b, name='retina_1', activation='relu',
+                        use_bias=use_b, name='retina_1', activation='relu',
                         trainable=True)(gn)
 
 elif retina_layers == 0:
