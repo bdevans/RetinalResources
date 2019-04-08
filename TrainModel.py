@@ -106,8 +106,8 @@ else:
 
 
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-x_train = np.mean(x_train, 3, keepdims=True)
-x_test = np.mean(x_test, 3, keepdims=True)
+x_train = np.mean(x_train, 3, keepdims=True)  # Average over RGB channels
+x_test = np.mean(x_test, 3, keepdims=True)  # Average over RGB channels
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
