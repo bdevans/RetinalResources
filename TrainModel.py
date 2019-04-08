@@ -164,7 +164,7 @@ if retina_layers == 2:
 elif retina_layers == 1:
     retina_out = Conv2D(retina_out_width, (filter_size, filter_size),
                         strides=(retina_out_stride,retina_out_stride),
-                        kernel_regularizer=keras.regularizers.l1(specalreg),
+                        kernel_regularizer=keras.regularizers.l1(specalreg),  # specalreg is not defined!
                         activity_regularizer=keras.regularizers.l1(actreg),
                         padding='same', input_shape=x_train.shape[1:],
                         use_bias = use_b, name='retina_1', activation='relu',
