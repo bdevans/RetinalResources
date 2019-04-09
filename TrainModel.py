@@ -107,8 +107,35 @@ if use_b == 1:
 else:
     use_b = False
 
+if data_set == 'cifar10':
+    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+elif data_set == 'pixel':
+    (noise_type, noise_cond, trial) = trial_label.split("_")
 
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    if noise_type == 'Salt-and-pepper':
+        data_path = os.path.join(os.getcwd(), 'data', 'salt_n_pepper', 'set_1')
+    elif noise_type == 'Additive':
+        data_path = os.path.join(os.getcwd(), 'data', 'uniform', 'set_1')
+    elif noise_type == 'Single-pixel':
+        data_path = os.path.join(os.getcwd(), 'data', 'single_pixel', 'set_1')
+    else:
+        sys.exit(f"Unknown noise type requested: {noise_type}")
+
+    train_path = os.path.join(data_path, 'train')
+    test_path = os.path.join(data_path, f"test_{noise_cond.lower()}")
+
+    # categories = []
+    # for root, dirs, files in os.walk(train_path):
+    #     if root == train_path:
+    #         categories = dirs
+    #     for cat in dirs:
+    #         if cat != '.':
+    #             categories.append()
+
+
+else:
+    sys.exit(f"Unknown data set requested: {data_set}")
+
 x_train = np.mean(x_train, 3, keepdims=True)  # Average over RGB channels
 x_test = np.mean(x_test, 3, keepdims=True)  # Average over RGB channels
 print('x_train shape:', x_train.shape)
