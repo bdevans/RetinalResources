@@ -14,9 +14,9 @@ from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 from keras.layers import (Dense, Dropout, Activation, Flatten, Reshape, Layer,
-                          BatchNormalization, LocallyConnected2D, ZeroPadding2D,
-                          Conv2D, MaxPooling2D, Conv2DTranspose, GaussianNoise,
-                          UpSampling2D, Input)
+                          BatchNormalization, LocallyConnected2D,
+                          ZeroPadding2D, Conv2D, MaxPooling2D, Conv2DTranspose,
+                          GaussianNoise, UpSampling2D, Input)
 from keras.engine import Layer, InputSpec
 from keras.utils import conv_utils
 from keras.legacy import interfaces
