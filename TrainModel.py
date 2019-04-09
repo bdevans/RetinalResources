@@ -126,10 +126,10 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
 filters = 64
-NX = 32
-NY = 32
-NC = 1
-img_rows, img_cols, img_chns = NX, NY, NC
+# NX = 32
+# NY = 32
+# NC = 1
+# img_rows, img_cols, img_chns = NX, NY, NC
 intermediate_dim = 1024
 x = Input(shape=x_train[0].shape)
 gn = GaussianNoise(noise_start)(x)
