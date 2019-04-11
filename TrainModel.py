@@ -7,6 +7,8 @@ import os
 import argparse
 
 import numpy as np
+from matplotlib import pyplot as plt
+from tqdm import tqdm
 import keras
 from keras import backend as K
 from keras import activations, initializers, regularizers, constraints, metrics
@@ -110,27 +112,49 @@ else:
 if data_set == 'cifar10':
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 elif data_set == 'pixel':
+    data_root = '/workspace/data/pixel'  # TODO: Pass in
     (noise_type, noise_cond, trial) = trial_label.split("_")
 
     if noise_type == 'Salt-and-pepper':
-        data_path = os.path.join(os.getcwd(), 'data', 'salt_n_pepper', 'set_1')
+        data_path = os.path.join(data_root, 'salt_n_pepper', 'set_1')
     elif noise_type == 'Additive':
-        data_path = os.path.join(os.getcwd(), 'data', 'uniform', 'set_1')
+        data_path = os.path.join(data_root, 'uniform', 'set_1')
     elif noise_type == 'Single-pixel':
-        data_path = os.path.join(os.getcwd(), 'data', 'single_pixel', 'set_1')
+        data_path = os.path.join(data_root, 'single_pixel', 'set_1')
     else:
         sys.exit(f"Unknown noise type requested: {noise_type}")
 
     train_path = os.path.join(data_path, 'train')
     test_path = os.path.join(data_path, f"test_{noise_cond.lower()}")
 
-    # categories = []
-    # for root, dirs, files in os.walk(train_path):
-    #     if root == train_path:
-    #         categories = dirs
-    #     for cat in dirs:
-    #         if cat != '.':
-    #             categories.append()
+    def load_images(path):
+
+        image_set = {}
+        for root, dirs, files in os.walk(path):
+            if root == path:
+                categories = sorted(dirs)
+                image_set = {cat: [] for cat in categories}
+            else:
+                image_set[os.path.basename(root)] = sorted(files)
+
+        n_cat_images = {cat: len(files) for (cat, files) in image_set.items()}
+        n_images = sum(n_cat_images.values())
+        image_dims = plt.imread(os.path.join(path, categories[0], image_set[categories[0]][0])).shape
+
+        X = np.zeros((n_images, *image_dims), dtype='float32')
+        y = np.zeros((n_images, len(categories)), dtype=int)
+        # y = np.zeros(n_images, dtype=int)
+
+        for c, (cat, files) in enumerate(tqdm(image_set.items(), desc=path)):
+            for i, image in enumerate(files):
+                X[i] = plt.imread(os.path.join(path, cat, image))
+            y[c*n_cat_images[cat]:(c+1)*n_cat_images[cat], c] = True
+
+        return image_set, X, y
+
+    train_images, x_train, y_train = load_images(train_path)
+    test_images, x_test, y_test = load_images(test_path)
+    num_classes = len(train_images)
 
 
 else:
@@ -142,14 +166,15 @@ print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
-x_train /= 255
-x_test /= 255
+if data_set == 'cifar10':
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    x_train /= 255
+    x_test /= 255
 
-# Convert class vectors to binary class matrices.
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
+    # Convert class vectors to binary class matrices.
+    y_train = keras.utils.to_categorical(y_train, num_classes)
+    y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
 filters = 64
