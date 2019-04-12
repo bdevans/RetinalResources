@@ -152,10 +152,25 @@ elif data_set == 'pixel':
 
         return image_set, X, y
 
-    train_images, x_train, y_train = load_images(train_path)
-    test_images, x_test, y_test = load_images(test_path)
-    num_classes = len(train_images)
+    if os.path.isfile(os.path.join(train_path, 'x_train.npy')):
+        x_train = np.load(os.path.join(train_path, 'x_train.npy'))
+        y_train = np.load(os.path.join(train_path, 'y_train.npy'))
+        # num_classes = len(os.listdir(train_path)) - 1
+        num_classes = len([os.path.join(train_path, o) for o in os.listdir(train_path)
+                           if os.path.isdir(os.path.join(train_path, o))])
+    else:
+        train_images, x_train, y_train = load_images(train_path)
+        num_classes = len(train_images)
+        np.save(os.path.join(train_path, 'x_train.npy'), x_train)
+        np.save(os.path.join(train_path, 'y_train.npy'), y_train)
 
+    if os.path.isfile(os.path.join(test_path, 'x_test.npy')):
+        x_test = np.load(os.path.join(test_path, 'x_test.npy'))
+        y_test = np.load(os.path.join(test_path, 'y_test.npy'))
+    else:
+        test_images, x_test, y_test = load_images(test_path)
+        np.save(os.path.join(test_path, 'x_test.npy'), x_test)
+        np.save(os.path.join(test_path, 'y_test.npy'), y_test)
 
 else:
     sys.exit(f"Unknown data set requested: {data_set}")
