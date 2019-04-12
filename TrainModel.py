@@ -97,7 +97,7 @@ model_name = (
     f"_epochs_{epochs}"
 )
 
-batch_size = 64
+batch_size = 64/2
 num_classes = 10
 
 if not os.path.isdir(save_dir):
