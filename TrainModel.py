@@ -118,14 +118,16 @@ if data_set == 'cifar10':
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 elif data_set == 'pixel':
     data_root = '/workspace/data/pixel'  # TODO: Pass in
+    set = 'set_32_32'
+
     (noise_type, noise_cond, trial) = trial_label.split("_")
 
     if noise_type == 'Salt-and-pepper':
-        data_path = os.path.join(data_root, 'salt_n_pepper', 'set_1')
+        data_path = os.path.join(data_root, 'salt_n_pepper', set)
     elif noise_type == 'Additive':
-        data_path = os.path.join(data_root, 'uniform', 'set_1')
+        data_path = os.path.join(data_root, 'uniform', set)
     elif noise_type == 'Single-pixel':
-        data_path = os.path.join(data_root, 'single_pixel', 'set_1')
+        data_path = os.path.join(data_root, 'single_pixel', set)
     else:
         sys.exit(f"Unknown noise type requested: {noise_type}")
 
