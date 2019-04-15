@@ -199,7 +199,7 @@ if data_set == 'cifar10':
     y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
-filters = 64
+# filters = 64
 # NX = 32
 # NY = 32
 # NC = 1
