@@ -61,7 +61,7 @@ parser.add_argument('--vvs_width', type=int, default=32,
                     help='Number of output channels in VVS layers')
 parser.add_argument('--epochs', type=int, default=20,
                     help='Number of epochs to train model')
-parser.add_argument('--data_augmentation', type=bool, default=True,
+parser.add_argument('--data_augmentation', type=int, default=1,
                     help='Flag to use data augmentation in training')
 
 
@@ -108,6 +108,11 @@ if use_b == 1:
     use_b = True
 else:
     use_b = False
+
+if data_augmentation == 1:
+    data_augmentation = True
+else:
+    data_augmentation = False
 
 if data_set == 'cifar10':
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
