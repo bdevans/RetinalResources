@@ -61,6 +61,8 @@ parser.add_argument('--vvs_width', type=int, default=32,
                     help='Number of output channels in VVS layers')
 parser.add_argument('--epochs', type=int, default=20,
                     help='Number of epochs to train model')
+parser.add_argument('--data_augmentation', type=bool, default=True,
+                    help='Flag to use data augmentation in training')
 
 
 args = parser.parse_args()
@@ -82,8 +84,7 @@ retina_out_width = args.retina_out_width
 vvs_width = args.vvs_width
 epochs = args.epochs
 reg = args.reg
-
-data_augmentation = True
+data_augmentation = args.data_augmentation
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 # model_name = 'cifar10_type_'+trial_label+'_noise_start_'+str(noise_start)+'_noise_end_'+str(noise_end)+'_reg_'+str(reg)+'_retina_reg_'+str(retina_out_weight_reg)+'_retina_hidden_channels_'+str(retina_hidden_channels)+'_SS_'+str(retina_out_stride)+'_task_'+task+'_filter_size_'+str(filter_size)+'_retina_layers_'+str(retina_layers)+'_vvs_layers'+str(vvs_layers)+'_bias_'+str(use_b)+'_actreg_'+str(actreg)+'_retina_out_channels_'+str(retina_out_width)+'_vvs_width_'+str(vvs_width)+'_epochs_'+str(epochs)
