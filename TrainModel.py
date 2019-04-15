@@ -356,7 +356,7 @@ if not os.path.isdir(save_dir):
 model_name = 'SAVED'+'_'+model_name
 model_path = os.path.join(save_dir, model_name)
 model.save(model_path)
-np.save('Logs/'+model_name+'_VALACC.npy', hist.history['val_acc'])
-np.save('Logs/'+model_name+'_ACC.npy', hist.history['acc'])
+np.save(os.path.join('Logs', f'{model_name}_VALACC.npy'), hist.history['val_acc'])
+np.save(os.path.join('Logs', f'{model_name}_ACC.npy'), hist.history['acc'])
 
 print(f'Saved trained model at {model_path}')
