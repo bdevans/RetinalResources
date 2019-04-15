@@ -158,12 +158,14 @@ elif data_set == 'pixel':
         return image_set, X, y
 
     if os.path.isfile(os.path.join(train_path, 'x_train.npy')):
+        print(f'Loading {data_set} data arrays.')
         x_train = np.load(os.path.join(train_path, 'x_train.npy'))
         y_train = np.load(os.path.join(train_path, 'y_train.npy'))
         # num_classes = len(os.listdir(train_path)) - 1
         num_classes = len([os.path.join(train_path, o) for o in os.listdir(train_path)
                            if os.path.isdir(os.path.join(train_path, o))])
     else:
+        print(f'Loading {data_set} image files.')
         train_images, x_train, y_train = load_images(train_path)
         num_classes = len(train_images)
         np.save(os.path.join(train_path, 'x_train.npy'), x_train)
