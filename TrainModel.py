@@ -87,15 +87,24 @@ reg = args.reg
 data_augmentation = args.data_augmentation
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
+# model_name = (
+#     f"{data_set}_type_{trial_label}_noise_start_{noise_start}"
+#     f"_noise_end_{noise_end}_reg_{reg}_retina_reg_{retina_out_weight_reg}"
+#     f"retina_hidden_channels_{retina_hidden_channels}_SS_{retina_out_stride}"
+#     f"_task_{task}_filter_size_{filter_size}_retina_layers_{retina_layers}"
+#     f"_vvs_layers{vvs_layers}_bias_{use_b}_actreg_{actreg}"
+#     f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
+#     f"_epochs_{epochs}"
+# )
+
 model_name = (
-    f"{data_set}_type_{trial_label}_noise_start_{noise_start}"
-    f"_noise_end_{noise_end}_reg_{reg}_retina_reg_{retina_out_weight_reg}"
-    f"retina_hidden_channels_{retina_hidden_channels}_SS_{retina_out_stride}"
-    f"_task_{task}_filter_size_{filter_size}_retina_layers_{retina_layers}"
-    f"_vvs_layers{vvs_layers}_bias_{use_b}_actreg_{actreg}"
+    f"{data_set}_type_{trial_label}_filter_size_{filter_size}"
+    f"_retina_layers_{retina_layers}_vvs_layers{vvs_layers}"
     f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
     f"_epochs_{epochs}"
 )
+
+print(model_name)
 
 batch_size = 64
 num_classes = 10
