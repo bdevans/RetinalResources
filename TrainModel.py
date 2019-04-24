@@ -107,6 +107,7 @@ model_name = (
 
 print(model_name)
 
+fresh_data = True
 batch_size = 64
 num_classes = 10
 
@@ -183,7 +184,7 @@ elif data_set == 'pixel':
     train_path = os.path.join(data_path, 'train')
     # test_path = os.path.join(data_path, f"test_{noise_cond.lower()}")
 
-    if os.path.isfile(os.path.join(train_path, 'x_train.npy')):
+    if os.path.isfile(os.path.join(train_path, 'x_train.npy')) and not fresh_data:
         print(f'Loading {data_set} data arrays.')
         x_train = np.load(os.path.join(train_path, 'x_train.npy'))
         y_train = np.load(os.path.join(train_path, 'y_train.npy'))
@@ -202,7 +203,7 @@ elif data_set == 'pixel':
     test_sets = []
     for test_cond in test_conditions:
         test_path = os.path.join(data_path, f"test_{test_cond.lower()}")
-        if os.path.isfile(os.path.join(test_path, 'x_test.npy')):
+        if os.path.isfile(os.path.join(test_path, 'x_test.npy')) and not fresh_data:
             x_test = np.load(os.path.join(test_path, 'x_test.npy'))
             y_test = np.load(os.path.join(test_path, 'y_test.npy'))
         else:
