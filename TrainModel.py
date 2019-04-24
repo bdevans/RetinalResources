@@ -179,7 +179,9 @@ elif data_set == 'pixel':
                 X[i] = plt.imread(os.path.join(path, cat, image))
             y[c*n_cat_images[cat]:(c+1)*n_cat_images[cat], c] = True
 
-        return image_set, X, y
+        shuffle = np.random.permutation(y.shape[0])
+
+        return image_set, X[shuffle], y[shuffle]
 
     train_path = os.path.join(data_path, 'train')
     # test_path = os.path.join(data_path, f"test_{noise_cond.lower()}")
