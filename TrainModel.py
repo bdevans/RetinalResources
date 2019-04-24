@@ -131,7 +131,9 @@ elif data_set == 'pixel':
 
     (noise_type, noise_cond, trial) = trial_label.split("_")
 
-    if noise_type == 'Salt-and-pepper':
+    if noise_type == 'Original':
+        data_path = os.path.join(data_root, 'orig', set)
+    elif noise_type == 'Salt-and-pepper':
         data_path = os.path.join(data_root, 'salt_n_pepper', set)
     elif noise_type == 'Additive':
         data_path = os.path.join(data_root, 'uniform', set)
