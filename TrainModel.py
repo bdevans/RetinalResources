@@ -125,11 +125,23 @@ else:
 
 if data_set == 'cifar10':
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    x_train = np.mean(x_train, 3, keepdims=True)  # Average over RGB channels
+    x_test = np.mean(x_test, 3, keepdims=True)  # Average over RGB channels
+    x_train = x_train.astype('float32')
+    x_test = x_test.astype('float32')
+    x_train /= 255
+    x_test /= 255
+
+    # Convert class vectors to binary class matrices.
+    y_train = keras.utils.to_categorical(y_train, num_classes)
+    y_test = keras.utils.to_categorical(y_test, num_classes)
+
 elif data_set == 'pixel':
     data_root = '/workspace/data/pixel'  # TODO: Pass in
     set = 'set_32_32'
+    test_conditions = ['Same', 'Diff', 'NoPix']
 
-    (noise_type, noise_cond, trial) = trial_label.split("_")
+    (noise_type, trial) = trial_label.split("_")
 
     if noise_type == 'Original':
         data_path = os.path.join(data_root, 'orig', set)
@@ -141,9 +153,6 @@ elif data_set == 'pixel':
         data_path = os.path.join(data_root, 'single_pixel', set)
     else:
         sys.exit(f"Unknown noise type requested: {noise_type}")
-
-    train_path = os.path.join(data_path, 'train')
-    test_path = os.path.join(data_path, f"test_{noise_cond.lower()}")
 
     def load_images(path):
 
@@ -170,6 +179,9 @@ elif data_set == 'pixel':
 
         return image_set, X, y
 
+    train_path = os.path.join(data_path, 'train')
+    # test_path = os.path.join(data_path, f"test_{noise_cond.lower()}")
+
     if os.path.isfile(os.path.join(train_path, 'x_train.npy')):
         print(f'Loading {data_set} data arrays.')
         x_train = np.load(os.path.join(train_path, 'x_train.npy'))
@@ -184,35 +196,30 @@ elif data_set == 'pixel':
         np.save(os.path.join(train_path, 'x_train.npy'), x_train)
         np.save(os.path.join(train_path, 'y_train.npy'), y_train)
 
-    if os.path.isfile(os.path.join(test_path, 'x_test.npy')):
-        x_test = np.load(os.path.join(test_path, 'x_test.npy'))
-        y_test = np.load(os.path.join(test_path, 'y_test.npy'))
-    else:
-        test_images, x_test, y_test = load_images(test_path)
-        np.save(os.path.join(test_path, 'x_test.npy'), x_test)
-        np.save(os.path.join(test_path, 'y_test.npy'), y_test)
+    x_train = np.mean(x_train, 3, keepdims=True)  # Average over RGB channels
 
+    test_sets = []
+    for test_cond in test_conditions:
+        test_path = os.path.join(data_path, f"test_{test_cond.lower()}")
+        if os.path.isfile(os.path.join(test_path, 'x_test.npy')):
+            x_test = np.load(os.path.join(test_path, 'x_test.npy'))
+            y_test = np.load(os.path.join(test_path, 'y_test.npy'))
+        else:
+            test_images, x_test, y_test = load_images(test_path)
+            np.save(os.path.join(test_path, 'x_test.npy'), x_test)
+            np.save(os.path.join(test_path, 'y_test.npy'), y_test)
+        test_sets.append((np.mean(x_test, 3, keepdims=True), y_test))
+    test_cond = "NoPix"  # Use this for examining learning curves
+    x_test, y_test = test_sets[test_conditions.index("NoPix")]  # Unpack default test set
 else:
     sys.exit(f"Unknown data set requested: {data_set}")
 
-x_train = np.mean(x_train, 3, keepdims=True)  # Average over RGB channels
-x_test = np.mean(x_test, 3, keepdims=True)  # Average over RGB channels
+# Summarise stimuli
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 print(y_train.shape[1], 'training categories')
 print(y_test.shape[1], 'testing categories')
-
-if data_set == 'cifar10':
-    x_train = x_train.astype('float32')
-    x_test = x_test.astype('float32')
-    x_train /= 255
-    x_test /= 255
-
-    # Convert class vectors to binary class matrices.
-    y_train = keras.utils.to_categorical(y_train, num_classes)
-    y_test = keras.utils.to_categorical(y_test, num_classes)
-
 
 # filters = 64
 # NX = 32
@@ -375,5 +382,17 @@ np.save(os.path.join('Logs', f'{model_name}_VALACC.npy'), hist.history['val_acc'
 np.save(os.path.join('Logs', f'{model_name}_ACC.npy'), hist.history['acc'])
 np.save(os.path.join('Logs', f'{model_name}_VALLOSS.npy'), hist.history['val_loss'])
 np.save(os.path.join('Logs', f'{model_name}_LOSS.npy'), hist.history['loss'])
+
+if data_set == 'pixel':
+    cond_acc = []
+    cond_loss = []
+    for test_cond, (x_test, y_test) in zip(test_conditions, test_sets):
+        loss, val_acc = model.evaluate(x=x_test, y=y_test, batch_size=batch_size)
+        cond_acc.append(val_acc)
+        cond_loss.append(loss)
+    print("Saving metrics: ", model.metrics_names)
+    np.save(os.path.join('Logs', f'{model_name}_CONDVALACC.npy'), np.array(cond_acc))
+    np.save(os.path.join('Logs', f'{model_name}_CONDVALLOSS.npy'), np.array(cond_loss))
+
 
 print(f'Saved trained model at {model_path}')
