@@ -373,5 +373,7 @@ model_path = os.path.join(save_dir, model_name)
 model.save(model_path)
 np.save(os.path.join('Logs', f'{model_name}_VALACC.npy'), hist.history['val_acc'])
 np.save(os.path.join('Logs', f'{model_name}_ACC.npy'), hist.history['acc'])
+np.save(os.path.join('Logs', f'{model_name}_VALLOSS.npy'), hist.history['val_loss'])
+np.save(os.path.join('Logs', f'{model_name}_LOSS.npy'), hist.history['loss'])
 
 print(f'Saved trained model at {model_path}')
