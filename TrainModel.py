@@ -200,6 +200,8 @@ x_test = np.mean(x_test, 3, keepdims=True)  # Average over RGB channels
 print('x_train shape:', x_train.shape)
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
+print(y_train.shape[1], 'training categories')
+print(y_test.shape[1], 'testing categories')
 
 if data_set == 'cifar10':
     x_train = x_train.astype('float32')
