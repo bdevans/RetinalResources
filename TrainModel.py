@@ -189,12 +189,14 @@ elif data_set == 'pixel':
         x_train = np.load(os.path.join(train_path, 'x_train.npy'))
         y_train = np.load(os.path.join(train_path, 'y_train.npy'))
         # num_classes = len(os.listdir(train_path)) - 1
-        num_classes = len([os.path.join(train_path, o) for o in os.listdir(train_path)
-                           if os.path.isdir(os.path.join(train_path, o))])
+        cat_dirs = [os.path.join(train_path, o) for o in os.listdir(train_path)
+                    if os.path.isdir(os.path.join(train_path, o))]
+        assert num_classes == len(cat_dirs)
     else:
         print(f'Loading {data_set} image files.')
         train_images, x_train, y_train = load_images(train_path)
-        num_classes = len(train_images)
+        print(train_images.keys())
+        assert num_classes == len(train_images)
         np.save(os.path.join(train_path, 'x_train.npy'), x_train)
         np.save(os.path.join(train_path, 'y_train.npy'), y_train)
 
@@ -208,6 +210,8 @@ elif data_set == 'pixel':
             y_test = np.load(os.path.join(test_path, 'y_test.npy'))
         else:
             test_images, x_test, y_test = load_images(test_path)
+            print(test_images.keys())
+            assert num_classes == len(test_images)
             np.save(os.path.join(test_path, 'x_test.npy'), x_test)
             np.save(os.path.join(test_path, 'y_test.npy'), y_test)
         test_sets.append((np.mean(x_test, 3, keepdims=True), y_test))
