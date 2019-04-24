@@ -5,6 +5,7 @@ from __future__ import print_function
 import sys
 import os
 import argparse
+import json
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -384,15 +385,16 @@ np.save(os.path.join('Logs', f'{model_name}_VALLOSS.npy'), hist.history['val_los
 np.save(os.path.join('Logs', f'{model_name}_LOSS.npy'), hist.history['loss'])
 
 if data_set == 'pixel':
-    cond_acc = []
-    cond_loss = []
+    cond_acc = {}
+    cond_loss = {}
     for test_cond, (x_test, y_test) in zip(test_conditions, test_sets):
         loss, val_acc = model.evaluate(x=x_test, y=y_test, batch_size=batch_size)
-        cond_acc.append(val_acc)
-        cond_loss.append(loss)
+        cond_acc[test_cond] = val_acc
+        cond_loss[test_cond] = loss
     print("Saving metrics: ", model.metrics_names)
-    np.save(os.path.join('Logs', f'{model_name}_CONDVALACC.npy'), np.array(cond_acc))
-    np.save(os.path.join('Logs', f'{model_name}_CONDVALLOSS.npy'), np.array(cond_loss))
-
+    with open(os.path.join('Logs', f'{model_name}_CONDVALACC.json'), "w") as jf:
+        json.dump(cond_acc, jf)
+    with open(os.path.join('Logs', f'{model_name}_CONDVALLOSS.json'), "w") as jf:
+        json.dump(cond_loss, jf)
 
 print(f'Saved trained model at {model_path}')
