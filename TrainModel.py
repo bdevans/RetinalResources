@@ -140,19 +140,19 @@ if data_set == 'cifar10':
 
 elif data_set == 'pixel':
     data_root = '/workspace/data/pixel'  # TODO: Pass in
-    set = 'set_32_32'
+    stimulus_set = 'set_32_32'
     test_conditions = ['Same', 'Diff', 'NoPix']
 
     (noise_type, trial) = trial_label.split("_")
 
     if noise_type == 'Original':
-        data_path = os.path.join(data_root, 'orig', set)
+        data_path = os.path.join(data_root, 'orig', stimulus_set)
     elif noise_type == 'Salt-and-pepper':
-        data_path = os.path.join(data_root, 'salt_n_pepper', set)
+        data_path = os.path.join(data_root, 'salt_n_pepper', stimulus_set)
     elif noise_type == 'Additive':
-        data_path = os.path.join(data_root, 'uniform', set)
+        data_path = os.path.join(data_root, 'uniform', stimulus_set)
     elif noise_type == 'Single-pixel':
-        data_path = os.path.join(data_root, 'single_pixel', set)
+        data_path = os.path.join(data_root, 'single_pixel', stimulus_set)
     else:
         sys.exit(f"Unknown noise type requested: {noise_type}")
 
