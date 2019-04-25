@@ -64,6 +64,8 @@ parser.add_argument('--epochs', type=int, default=20,
                     help='Number of epochs to train model')
 parser.add_argument('--data_augmentation', type=int, default=1,
                     help='Flag to use data augmentation in training')
+parser.add_argument('--fresh_data', type=int, default=0,
+                    help='Flag to (re)read images from files')
 
 
 args = parser.parse_args()
@@ -107,7 +109,7 @@ model_name = (
 
 print(model_name)
 
-fresh_data = True
+# fresh_data = True
 batch_size = 64
 num_classes = 10
 
