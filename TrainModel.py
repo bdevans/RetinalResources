@@ -88,6 +88,7 @@ vvs_width = args.vvs_width
 epochs = args.epochs
 reg = args.reg
 data_augmentation = args.data_augmentation
+fresh_data = args.fresh_data
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 # model_name = (
