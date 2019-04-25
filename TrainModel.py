@@ -168,7 +168,8 @@ elif data_set == 'pixel':
 
         n_cat_images = {cat: len(files) for (cat, files) in image_set.items()}
         n_images = sum(n_cat_images.values())
-        image_dims = plt.imread(os.path.join(path, categories[0], image_set[categories[0]][0])).shape
+        image_dims = plt.imread(os.path.join(path, categories[0],
+                                image_set[categories[0]][0])).shape
 
         X = np.zeros((n_images, *image_dims), dtype='float32')
         y = np.zeros((n_images, len(categories)), dtype=int)
