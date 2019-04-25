@@ -178,7 +178,7 @@ elif data_set == 'pixel':
         tally = 0
         for c, (cat, files) in enumerate(tqdm(image_set.items(), desc=path)):
             for i, image in enumerate(files):
-                X[i] = plt.imread(os.path.join(path, cat, image))
+                X[i+tally] = plt.imread(os.path.join(path, cat, image))
                 # y[i+tally, c] = True
             y[tally:tally+len(files), c] = True
             # y[c*n_cat_images[cat]:(c+1)*n_cat_images[cat], c] = True
