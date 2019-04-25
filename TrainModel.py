@@ -175,10 +175,13 @@ elif data_set == 'pixel':
         y = np.zeros((n_images, len(categories)), dtype=int)
         # y = np.zeros(n_images, dtype=int)
 
+        tally = 0
         for c, (cat, files) in enumerate(tqdm(image_set.items(), desc=path)):
             for i, image in enumerate(files):
                 X[i] = plt.imread(os.path.join(path, cat, image))
-            y[c*n_cat_images[cat]:(c+1)*n_cat_images[cat], c] = True
+            # y[c*n_cat_images[cat]:(c+1)*n_cat_images[cat], c] = True
+            y[tally:len(files), c] = 1
+            tally += len(files)
 
         shuffle = np.random.permutation(y.shape[0])
 
