@@ -2,8 +2,8 @@
 # coding: utf-8
 
 from __future__ import print_function
-import sys
 import os
+import sys
 import argparse
 import json
 
@@ -281,7 +281,6 @@ if retina_layers == 2:
                         padding='same', activation='relu',
                         activity_regularizer=keras.regularizers.l1(actreg),
                         use_bias=use_b, name='retina_2', trainable=True)(conv1_nonlin)
-
 
 elif retina_layers == 1:
     retina_out = Conv2D(retina_out_width, (filter_size, filter_size),
