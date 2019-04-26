@@ -3,20 +3,19 @@ import sys
 import time
 import argparse
 
-import keras
-from keras.datasets import cifar10
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential, load_model
-from keras.layers import (Dense, Dropout, Activation, Flatten, Reshape, Layer,
-                          BatchNormalization Conv2D, MaxPooling2D,
-                          Conv2DTranspose, GaussianNoise, UpSampling2D, Input,
-                          LocallyConnected2D, ZeroPadding2D, Lambda)
-from keras import backend as K
-from keras import metrics
-from keras.models import Model
-from keras.applications import vgg16
 import numpy as np
 from scipy.misc import imsave
+import keras
+from keras import backend as K
+from keras import metrics
+from keras.datasets import cifar10
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential, Model, load_model
+from keras.layers import (Dense, Dropout, Activation, Flatten, Reshape, Layer,
+                          BatchNormalization, LocallyConnected2D,
+                          ZeroPadding2D, Conv2D, MaxPooling2D, Conv2DTranspose,
+                          GaussianNoise, UpSampling2D, Input, Lambda)
+from keras.applications import vgg16
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
