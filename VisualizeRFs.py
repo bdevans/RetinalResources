@@ -14,7 +14,7 @@ from keras.models import Sequential, Model, load_model
 from keras.layers import (Dense, Dropout, Activation, Flatten, Reshape, Layer,
                           BatchNormalization, LocallyConnected2D,
                           ZeroPadding2D, Conv2D, MaxPooling2D, Conv2DTranspose,
-                          GaussianNoise, UpSampling2D, Input, Lambda)
+                          GaussianNoise, UpSampling2D, Input)
 from keras.applications import vgg16
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
