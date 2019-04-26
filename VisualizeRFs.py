@@ -1,33 +1,24 @@
-
-
-from __future__ import print_function
-from __future__ import print_function
 import os
+import sys
+import time
+import argparse
+
 import keras
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, Flatten, Reshape, Layer, BatchNormalization
-from keras.layers import Conv2D, MaxPooling2D, Conv2DTranspose, GaussianNoise, UpSampling2D, Input, LocallyConnected2D, ZeroPadding2D, Lambda
+from keras.models import Sequential, load_model
+from keras.layers import (Dense, Dropout, Activation, Flatten, Reshape, Layer,
+                          BatchNormalization Conv2D, MaxPooling2D,
+                          Conv2DTranspose, GaussianNoise, UpSampling2D, Input,
+                          LocallyConnected2D, ZeroPadding2D, Lambda)
 from keras import backend as K
 from keras import metrics
 from keras.models import Model
-import numpy as np
-import sys
-from scipy.misc import imsave
-import numpy as np
-import time
 from keras.applications import vgg16
-from keras import backend as K
-import keras
-from keras.layers import Layer, Activation
-from keras import metrics
-from keras import backend as K
+import numpy as np
+from scipy.misc import imsave
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
-
-import sys
-import argparse
 
 
 NX = 32
@@ -239,7 +230,6 @@ if task == 'classification':
 else:
     sys.exit("No other task types besides classification configured yet")
 
-from keras.models import load_model
 model = load_model(model_path)
 
 model.summary()
