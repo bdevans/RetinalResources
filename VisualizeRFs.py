@@ -291,8 +291,9 @@ def normalize(x):
     return x / (K.sqrt(K.mean(K.square(x))) + 1e-5)
 
 
-v1_weights = vvs_1_layer.get_weights()
-np.save('saved_weights/V1W_'+model_name+'.npy', v1_weights)
+if vvs_layers:
+    v1_weights = vvs_1_layer.get_weights()
+    np.save('saved_weights/V1W_'+model_name+'.npy', v1_weights)
 
 kept_filters = []
 RFs = []
