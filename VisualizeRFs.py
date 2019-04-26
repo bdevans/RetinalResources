@@ -281,6 +281,7 @@ np.save('saved_weights/V1W_'+model_name+'.npy', v1_weights)
 
 kept_filters = []
 RFs = []
+step = 1.
 for filter_index in range(layer_dict[layer_name].output.shape[3]):
     print(layer_dict[layer_name].output.shape)
 
@@ -297,13 +298,9 @@ for filter_index in range(layer_dict[layer_name].output.shape[3]):
         image_rep_size_y = layer_output.shape[2]
         loss = K.mean(layer_output[:, image_rep_size_x//2, image_rep_size_y//2, filter_index])
 
-    grads = K.gradients(loss, input_img)[0]
-    grads = normalize(grads)
+    grads = normalize(K.gradients(loss, input_img)[0])
     iterate = K.function([input_img], [loss, grads])
-
     layer_out_func = K.function([input_img], [layer_output])
-
-    step = 1.
 
     # start from blank image
     if K.image_data_format() == 'channels_first':
@@ -314,13 +311,11 @@ for filter_index in range(layer_dict[layer_name].output.shape[3]):
     # we run gradient ascent for 1 step so it's just a computation of the gradient
     loss_value, grads_value = iterate([input_img_data])
     layerout = layer_out_func([input_img_data])[0]
-
     input_img_data += grads_value * step
     RFs.append(input_img_data[0])
-
     img = deprocess_image(input_img_data[0])
-
     kept_filters.append((img, loss_value))
+
     end_time = time.time()
 
 n = 5  # visualization grid size
