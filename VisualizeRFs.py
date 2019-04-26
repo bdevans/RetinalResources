@@ -8,7 +8,7 @@ from scipy.misc import imsave
 import keras
 from keras import backend as K
 from keras import metrics
-from keras.datasets import cifar10
+# from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model, load_model
 from keras.layers import (Dense, Dropout, Activation, Flatten, Reshape, Layer,
@@ -93,6 +93,8 @@ parser.add_argument('--epochs', type=int, default=20,
                     help='Number of epochs to train model')
 parser.add_argument('--layer_name', default=None,
                     help='Keras model name of layer being visualized')
+parser.add_argument('--image_shape', default=None,
+                    help='Dimensions of images used: (NX, NY, NC)')
 
 
 args = parser.parse_args()
@@ -114,6 +116,7 @@ vvs_width = args.vvs_width
 epochs = args.epochs
 reg = args.reg
 layer_name = args.layer_name
+image_shape = args.image_shape
 
 
 model_name = 'cifar10_type_'+trial_label+'_noise_start_'+str(noise_start)+'_noise_end_'+str(noise_end)+'_reg_'+str(reg)+'_retina_reg_'+str(retina_out_weight_reg)+'_retina_hidden_channels_'+str(retina_hidden_channels)+'_SS_'+str(retina_out_stride)+'_task_'+task+'_filter_size_'+str(filter_size)+'_retina_layers_'+str(retina_layers)+'_vvs_layers'+str(vvs_layers)+'_bias_'+str(use_b)+'_actreg_'+str(actreg)+'_retina_out_channels_'+str(retina_out_width)+'_vvs_width_'+str(vvs_width)+'_epochs_'+str(epochs)
@@ -126,17 +129,19 @@ if use_b == 1:
 else:
     use_b = False
 
-
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
-x_train = np.mean(x_train, 3, keepdims=True)
-x_test = np.mean(x_test, 3, keepdims=True)
-print('x_train shape:', x_train.shape)
-print(x_train.shape[0], 'train samples')
-print(x_test.shape[0], 'test samples')
+if not image_shape:
+    image_shape = (32, 32, 1)
+print(f'Image dimensions {image_shape}')
+# (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+# x_train = np.mean(x_train, 3, keepdims=True)
+# x_test = np.mean(x_test, 3, keepdims=True)
+# print('x_train shape:', x_train.shape)
+# print(x_train.shape[0], 'train samples')
+# print(x_test.shape[0], 'test samples')
 
 # Convert class vectors to binary class matrices.
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
+# y_train = keras.utils.to_categorical(y_train, num_classes)
+# y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
 # filters = 64
@@ -147,13 +152,13 @@ y_test = keras.utils.to_categorical(y_test, num_classes)
 # num_conv = 3
 intermediate_dim = 1024
 
-x = Input(shape=x_train[0].shape)
+x = Input(shape=image_shape)  # x_train[0].shape
 gn = GaussianNoise(noise_start)(x)
 if retina_layers > 2:
     conv1_nonlin = Conv2D(retina_hidden_channels, (filter_size, filter_size),
                           kernel_regularizer=keras.regularizers.l1(reg),
                           padding='same', name='retina_1', activation='relu',
-                          input_shape=x_train.shape[1:])(gn)
+                          input_shape=image_shape)(gn)  # x_train.shape[1:]
     retina_out = Conv2D(retina_hidden_channels, (filter_size, filter_size),
                         kernel_regularizer=keras.regularizers.l1(reg),
                         padding='same', activation='relu', name='retina_2',
@@ -175,7 +180,7 @@ if retina_layers > 2:
 if retina_layers == 2:
     conv1_nonlin = Conv2D(retina_hidden_channels, (filter_size, filter_size),
                           kernel_regularizer=keras.regularizers.l1(reg),
-                          padding='same', input_shape=x_train.shape[1:],
+                          padding='same', input_shape=image_shape,  # x_train.shape[1:]
                           name='retina_1', activation='relu', trainable=True)(gn)
     retina_out = Conv2D(retina_out_width, (filter_size, filter_size),
                         strides=(retina_out_stride, retina_out_stride),
@@ -189,7 +194,7 @@ elif retina_layers == 1:
                         strides=(retina_out_stride, retina_out_stride),
                         kernel_regularizer=keras.regularizers.l1(specalreg),  # specalreg is not defined!
                         activity_regularizer=keras.regularizers.l1(actreg),
-                        padding='same', input_shape=x_train.shape[1:],
+                        padding='same', input_shape=image_shape,  # x_train.shape[1:]
                         use_bias=use_b, name='retina_1', activation='relu',
                         trainable=True)(gn)
 
@@ -258,10 +263,10 @@ else:
 model = load_model(model_path)
 model.summary()
 
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
-x_train /= 255
-x_test /= 255
+# x_train = x_train.astype('float32')
+# x_test = x_test.astype('float32')
+# x_train /= 255
+# x_test /= 255
 
 
 input_img = model.input
@@ -293,20 +298,18 @@ for filter_index in range(layer_dict[layer_name].output.shape[3]):
         image_rep_size_x = layer_output.shape[2]
         image_rep_size_y = layer_output.shape[3]
         loss = K.mean(layer_output[:, filter_index, image_rep_size_x//2, image_rep_size_y//2])
+        # start from blank image
+        input_img_data = np.zeros((1, 1, img_width, img_height))
     else:
         image_rep_size_x = layer_output.shape[1]
         image_rep_size_y = layer_output.shape[2]
         loss = K.mean(layer_output[:, image_rep_size_x//2, image_rep_size_y//2, filter_index])
+        # start from blank image
+        input_img_data = np.zeros((1, img_width, img_height, 1))
 
     grads = normalize(K.gradients(loss, input_img)[0])
     iterate = K.function([input_img], [loss, grads])
     layer_out_func = K.function([input_img], [layer_output])
-
-    # start from blank image
-    if K.image_data_format() == 'channels_first':
-        input_img_data = 0.0*np.ones((1, 1, img_width, img_height))
-    else:
-        input_img_data = 0.0*np.ones((1, img_width, img_height, 1))
 
     # we run gradient ascent for 1 step so it's just a computation of the gradient
     loss_value, grads_value = iterate([input_img_data])
