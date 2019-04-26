@@ -49,16 +49,18 @@ def deprocess_image(x):
     return x
 
 
-batch_size = 32
+# batch_size = 32
 num_classes = 10
-epochs = 0
-data_augmentation = True
-num_predictions = 20
-batch_norm = 0
+# epochs = 0
+# data_augmentation = True
+# num_predictions = 20
+# batch_norm = 0
 
 # Instantiate the parser
 parser = argparse.ArgumentParser()
 
+parser.add_argument('--data_set', type=str, default='cifar10',
+                    help='Data set to use')
 parser.add_argument('--trial_label', default='Trial1',
                     help='For labeling different runs of the same model')
 parser.add_argument('--noise_start', type=float, default=0.0,
@@ -99,6 +101,7 @@ parser.add_argument('--image_shape', default=None,
 
 args = parser.parse_args()
 
+data_set = args.data_set
 trial_label = args.trial_label
 noise_start = args.noise_start
 noise_end = args.noise_end
@@ -119,7 +122,14 @@ layer_name = args.layer_name
 image_shape = args.image_shape
 
 
-model_name = 'cifar10_type_'+trial_label+'_noise_start_'+str(noise_start)+'_noise_end_'+str(noise_end)+'_reg_'+str(reg)+'_retina_reg_'+str(retina_out_weight_reg)+'_retina_hidden_channels_'+str(retina_hidden_channels)+'_SS_'+str(retina_out_stride)+'_task_'+task+'_filter_size_'+str(filter_size)+'_retina_layers_'+str(retina_layers)+'_vvs_layers'+str(vvs_layers)+'_bias_'+str(use_b)+'_actreg_'+str(actreg)+'_retina_out_channels_'+str(retina_out_width)+'_vvs_width_'+str(vvs_width)+'_epochs_'+str(epochs)
+# model_name = 'cifar10_type_'+trial_label+'_noise_start_'+str(noise_start)+'_noise_end_'+str(noise_end)+'_reg_'+str(reg)+'_retina_reg_'+str(retina_out_weight_reg)+'_retina_hidden_channels_'+str(retina_hidden_channels)+'_SS_'+str(retina_out_stride)+'_task_'+task+'_filter_size_'+str(filter_size)+'_retina_layers_'+str(retina_layers)+'_vvs_layers'+str(vvs_layers)+'_bias_'+str(use_b)+'_actreg_'+str(actreg)+'_retina_out_channels_'+str(retina_out_width)+'_vvs_width_'+str(vvs_width)+'_epochs_'+str(epochs)
+
+model_name = (
+    f"{data_set}_type_{trial_label}_filter_size_{filter_size}"
+    f"_retina_layers_{retina_layers}_vvs_layers{vvs_layers}"
+    f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
+    f"_epochs_{epochs}"
+)
 model_name = 'SAVED'+'_'+model_name
 
 model_path = os.path.join(load_dir, model_name)
