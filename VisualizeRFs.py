@@ -21,19 +21,18 @@ from scipy.misc import imsave
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 
-NX = 32
-NY = 32
-NC = 1
-img_rows, img_cols, img_chns = NX, NY, NC
+# NX = 32
+# NY = 32
+# NC = 1
+# img_rows, img_cols, img_chns = NX, NY, NC
 
 load_dir = os.path.join(os.getcwd(), 'saved_models')
-
-
 
 img_width = 32
 img_height = 32
 
 K.set_learning_phase(1)
+
 
 def deprocess_image(x):
     x -= x.mean()
@@ -97,10 +96,7 @@ parser.add_argument('--layer_name', default=None,
                     help='Keras model name of layer being visualized')
 
 
-
-
 args = parser.parse_args()
-
 
 trial_label = args.trial_label
 noise_start = args.noise_start
@@ -146,14 +142,12 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 
-
-
-filters = 64
-NX = 32
-NY = 32
-NC = 1
-img_rows, img_cols, img_chns = NX, NY, NC
-num_conv = 3
+# filters = 64
+# NX = 32
+# NY = 32
+# NC = 1
+# img_rows, img_cols, img_chns = NX, NY, NC
+# num_conv = 3
 intermediate_dim = 1024
 
 x = Input(shape=x_train[0].shape)
