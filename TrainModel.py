@@ -406,7 +406,7 @@ print('History', hist.history)
 # Save model and weights
 if not os.path.isdir(save_dir):
     os.makedirs(save_dir)
-model_name = 'SAVED'+'_'+model_name
+# model_name = 'SAVED'+'_'+model_name
 model_path = os.path.join(save_dir, model_name)
 model.save(model_path)
 np.save(os.path.join('Logs', f'{model_name}_VALACC.npy'), hist.history['val_acc'])
