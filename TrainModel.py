@@ -66,7 +66,8 @@ parser.add_argument('--data_augmentation', type=int, default=1,
                     help='Flag to use data augmentation in training')
 parser.add_argument('--fresh_data', type=int, default=0,
                     help='Flag to (re)read images from files')
-
+parser.add_argument('--model_name', type=str, default=None,
+                    help='File name root to save outputs with')
 
 args = parser.parse_args()
 
@@ -89,24 +90,37 @@ epochs = args.epochs
 reg = args.reg
 data_augmentation = args.data_augmentation
 fresh_data = args.fresh_data
+model_name = args.model_name
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
+if not model_name:
+    model_name = (
+        f"{data_set}_type_{trial_label}_noise_start_{noise_start}"
+        f"_noise_end_{noise_end}_reg_{reg}_retina_reg_{retina_out_weight_reg}"
+        f"retina_hidden_channels_{retina_hidden_channels}_SS_{retina_out_stride}"
+        f"_task_{task}_filter_size_{filter_size}_retina_layers_{retina_layers}"
+        f"_vvs_layers_{vvs_layers}_bias_{use_b}_actreg_{actreg}"
+        f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
+        f"_epochs_{epochs}"
+    )
+
 # model_name = (
-#     f"{data_set}_type_{trial_label}_noise_start_{noise_start}"
-#     f"_noise_end_{noise_end}_reg_{reg}_retina_reg_{retina_out_weight_reg}"
-#     f"retina_hidden_channels_{retina_hidden_channels}_SS_{retina_out_stride}"
-#     f"_task_{task}_filter_size_{filter_size}_retina_layers_{retina_layers}"
-#     f"_vvs_layers{vvs_layers}_bias_{use_b}_actreg_{actreg}"
+#     f"{data_set}_type_{trial_label}_filter_size_{filter_size}"
+#     f"_retina_layers_{retina_layers}_vvs_layers{vvs_layers}"
 #     f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
 #     f"_epochs_{epochs}"
 # )
+#
+# model_name = (
+#     f"{data_set}_{trial_label}_filter_size={filter_size}"
+#     f"_retina_layers={retina_layers}_vvs_layers={vvs_layers}"
+#     f"_retina_out_channels={retina_out_width}_vvs_width={vvs_width}"
+#     f"_epochs={epochs}"
+# )
 
-model_name = (
-    f"{data_set}_type_{trial_label}_filter_size_{filter_size}"
-    f"_retina_layers_{retina_layers}_vvs_layers{vvs_layers}"
-    f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
-    f"_epochs_{epochs}"
-)
+label = data_set.split('_')
+if len(label) > 1:
+    data_set, noise_type = label
 
 print(model_name)
 
