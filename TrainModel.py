@@ -370,7 +370,8 @@ else:
 
 if pretrained_model:
     # Load weights from saved model
-    model.load_weights(model_path, by_name=True)
+    pretrained_model_path = os.path.join(save_dir, pretrained_model)
+    model.load_weights(pretrained_model_path, by_name=True)
 
     # Freeze weights in convolutional layers during training
     for layer in model.layers:
