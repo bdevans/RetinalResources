@@ -68,6 +68,8 @@ parser.add_argument('--fresh_data', type=int, default=0,
                     help='Flag to (re)read images from files')
 parser.add_argument('--model_name', type=str, default=None,
                     help='File name root to save outputs with')
+parser.add_argument('--pretrained_model', type=str, default=None,
+                    help='Pretrained model')
 
 args = parser.parse_args()
 
@@ -91,6 +93,7 @@ reg = args.reg
 data_augmentation = args.data_augmentation
 fresh_data = args.fresh_data
 model_name = args.model_name
+pretrained_model = args.pretrained_model
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 if not model_name:
@@ -259,6 +262,7 @@ print(y_test.shape[1], 'testing categories')
 # NC = 1
 # img_rows, img_cols, img_chns = NX, NY, NC
 intermediate_dim = 1024
+
 x = Input(shape=x_train[0].shape)
 gn = GaussianNoise(noise_start)(x)
 if retina_layers > 2:
@@ -364,7 +368,20 @@ if task == 'classification':
 else:
     sys.exit("No other task types besides classification configured yet")
 
-#model.load_weights(model_path, by_name=True) -- Uncomment to load from saved model
+if pretrained_model:
+    # Load weights from saved model
+    model.load_weights(model_path, by_name=True)
+
+    # Freeze weights in convolutional layers during training
+    for layer in model.layers:
+        if isinstance(layer, keras.layers.convolutional.Conv2D):
+            print(f"Freezing layer: {layer.name}")
+            layer.trainable = False
+
+    # Recompile model for changes to take effect
+    model.compile(loss='categorical_crossentropy',
+                  optimizer=opt,
+                  metrics=['accuracy'])
 
 model.summary()
 
