@@ -21,7 +21,7 @@ from keras.layers import (Dense, Dropout, Activation, Flatten, Reshape, Layer,
                           ZeroPadding2D, Conv2D, MaxPooling2D, Conv2DTranspose,
                           GaussianNoise, UpSampling2D, Input)
 from keras.engine import Layer, InputSpec
-from keras.utils import conv_utils
+from keras.utils import conv_utils, multi_gpu_model
 from keras.legacy import interfaces
 
 
@@ -70,6 +70,8 @@ parser.add_argument('--model_name', type=str, default=None,
                     help='File name root to save outputs with')
 parser.add_argument('--pretrained_model', type=str, default=None,
                     help='Pretrained model')
+parser.add_argument('--parallel', type=int, default=0,
+                    help='Flag to train across multiple GPUs')
 
 args = parser.parse_args()
 
@@ -94,6 +96,7 @@ data_augmentation = args.data_augmentation
 fresh_data = args.fresh_data
 model_name = args.model_name
 pretrained_model = args.pretrained_model
+parallel = args.parallel
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 if not model_name:
@@ -383,6 +386,9 @@ if pretrained_model:
     # model.compile(loss='categorical_crossentropy',
     #               optimizer=opt,
     #               metrics=['accuracy'])
+
+if parallel:
+    model = multi_gpu_model(model)
 
 # Compile the model last before training for all changes to take effect
 model.compile(loss='categorical_crossentropy',
