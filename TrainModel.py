@@ -361,9 +361,9 @@ opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 if task == 'classification':
     model = Model(x, output)
 
-    model.compile(loss='categorical_crossentropy',
-                  optimizer=opt,
-                  metrics=['accuracy'])
+    # model.compile(loss='categorical_crossentropy',
+    #               optimizer=opt,
+    #               metrics=['accuracy'])
 
 else:
     sys.exit("No other task types besides classification configured yet")
@@ -380,9 +380,14 @@ if pretrained_model:
             layer.trainable = False
 
     # Recompile model for changes to take effect
-    model.compile(loss='categorical_crossentropy',
-                  optimizer=opt,
-                  metrics=['accuracy'])
+    # model.compile(loss='categorical_crossentropy',
+    #               optimizer=opt,
+    #               metrics=['accuracy'])
+
+# Compile the model last before training for all changes to take effect
+model.compile(loss='categorical_crossentropy',
+              optimizer=opt,
+              metrics=['accuracy'])
 
 model.summary()
 
