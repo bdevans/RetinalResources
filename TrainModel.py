@@ -70,8 +70,8 @@ parser.add_argument('--model_name', type=str, default=None,
                     help='File name root to save outputs with')
 parser.add_argument('--pretrained_model', type=str, default=None,
                     help='Pretrained model')
-parser.add_argument('--parallel', type=int, default=0,
-                    help='Flag to train across multiple GPUs')
+parser.add_argument('--n_gpus', type=int, default=1,
+                    help='Number of GPUs to train across')
 
 args = parser.parse_args()
 
@@ -96,7 +96,7 @@ data_augmentation = args.data_augmentation
 fresh_data = args.fresh_data
 model_name = args.model_name
 pretrained_model = args.pretrained_model
-parallel = args.parallel
+n_gpus = args.n_gpus
 
 save_dir = os.path.join(os.getcwd(), 'saved_models')
 if not model_name:
@@ -387,8 +387,8 @@ if pretrained_model:
     #               optimizer=opt,
     #               metrics=['accuracy'])
 
-if parallel:
-    model = multi_gpu_model(model)
+if n_gpus > 1:
+    model = multi_gpu_model(model, gpus=n_gpus)
 
 # Compile the model last before training for all changes to take effect
 model.compile(loss='categorical_crossentropy',
