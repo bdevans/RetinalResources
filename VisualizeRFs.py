@@ -97,7 +97,8 @@ parser.add_argument('--layer_name', default=None,
                     help='Keras model name of layer being visualized')
 parser.add_argument('--image_shape', default=None,
                     help='Dimensions of images used: (NX, NY, NC)')
-
+parser.add_argument('--model_name', type=str, default=None,
+                    help='File name root to save outputs with')
 
 args = parser.parse_args()
 
@@ -120,17 +121,18 @@ epochs = args.epochs
 reg = args.reg
 layer_name = args.layer_name
 image_shape = args.image_shape
-
+model_name = args.model_name
 
 # model_name = 'cifar10_type_'+trial_label+'_noise_start_'+str(noise_start)+'_noise_end_'+str(noise_end)+'_reg_'+str(reg)+'_retina_reg_'+str(retina_out_weight_reg)+'_retina_hidden_channels_'+str(retina_hidden_channels)+'_SS_'+str(retina_out_stride)+'_task_'+task+'_filter_size_'+str(filter_size)+'_retina_layers_'+str(retina_layers)+'_vvs_layers'+str(vvs_layers)+'_bias_'+str(use_b)+'_actreg_'+str(actreg)+'_retina_out_channels_'+str(retina_out_width)+'_vvs_width_'+str(vvs_width)+'_epochs_'+str(epochs)
 
-model_name = (
-    f"{data_set}_type_{trial_label}_filter_size_{filter_size}"
-    f"_retina_layers_{retina_layers}_vvs_layers{vvs_layers}"
-    f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
-    f"_epochs_{epochs}"
-)
-model_name = 'SAVED'+'_'+model_name
+if not model_name:
+    model_name = (
+        f"{data_set}_type_{trial_label}_filter_size_{filter_size}"
+        f"_retina_layers_{retina_layers}_vvs_layers_{vvs_layers}"
+        f"_retina_out_channels_{retina_out_width}_vvs_width_{vvs_width}"
+        f"_epochs_{epochs}"
+    )
+    # model_name = 'SAVED'+'_'+model_name
 
 model_path = os.path.join(load_dir, model_name)
 
